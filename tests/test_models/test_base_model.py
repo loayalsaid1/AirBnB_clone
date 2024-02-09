@@ -115,3 +115,7 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertEqual(created_at, attributes['created_at'])
         self.assertEqual(updated_at, attributes['updated_at'])
+
+
+if __name__ == "__main__":
+    unittest.main()

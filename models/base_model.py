@@ -4,8 +4,7 @@
 
 from uuid import uuid4
 import datetime
-
-
+from models import storage
 class BaseModel:
     """Base model for other models"""
     def __init__(self, *args, **kwargs):
