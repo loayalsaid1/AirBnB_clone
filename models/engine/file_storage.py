@@ -17,16 +17,15 @@ class FileStorage:
     def new(self, obj):
         """Add a new object to the <__objects> dictionary in
             format {<obj_classname.obj_id : obj}"""
-        FileStorage.__objects += {f"{obj.__class__.__name}.{obj.id}": obj}
+        FileStorage.__objects.update({f"{obj.__class__.__name__}.{obj.id}": obj.to_dict()})
 
     def save(self):
         """Serialize <__objects> to the json file in the <__file_path>"""
-        with open(FileStorage.__file_path, "a") as f:
+        with open(FileStorage.__file_path, "w") as f:
             dump(FileStorage.__objects, f)
     
     def reload(self):
         """deserialize the json <__file_path> to <__objects>"""
         if exists(FileStorage.__file_path):
-            FileStorage.__objects = dict(load(FileStorage.__file_path))
-
-
+            with open(FileStorage.__file_path, "r") as f:
+                FileStorage.__objects.update(load(f))

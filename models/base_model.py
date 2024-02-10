@@ -5,6 +5,8 @@
 from uuid import uuid4
 import datetime
 from models import storage
+
+
 class BaseModel:
     """Base model for other models"""
     def __init__(self, *args, **kwargs):
@@ -28,6 +30,7 @@ class BaseModel:
         else:
             self.id = str(uuid4())
             self.created_at = self.updated_at = datetime.datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """Define the string representation of an instance"""
@@ -36,6 +39,7 @@ class BaseModel:
     def save(self):
         """Update the updated_at attribute to the current time"""
         self.updated_at = datetime.datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Make a dictionary of the attributes of the instance
