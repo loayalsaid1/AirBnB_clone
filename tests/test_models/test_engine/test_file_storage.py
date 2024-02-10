@@ -13,11 +13,15 @@ class Test_FileStorage(unittest.TestCase):
 
     def setUp(self):
         """Run before any testcase"""
+        FileStorage._FileStorage__objects.clear()
+
         self.b1 = BaseModel()
         
 
     def tearDown(self):
         """Run after each testcase"""
+        FileStorage._FileStorage__objects.clear()
+
         del self.b1
     
     def test_None_file_storage(self):
@@ -29,22 +33,28 @@ class Test_FileStorage(unittest.TestCase):
         """Test the attibutes of the class"""
         # Attributes
         self.assertTrue(hasattr(FileStorage,
-                                "_File_Storage__file_path"))
+                                "_FileStorage__file_path"))
         self.assertTrue(hasattr(FileStorage,
-                                "_File_Storage__objects"))
+                                "_FileStorage__objects"))
         
         # Types
-        self.assertIsInstance(FileStorage._File_Storage__file_path, str)
-        self.assertIsInstance(FileStorage._File_Storage__objects, dict)
+        self.assertIsInstance(FileStorage._FileStorage__file_path, str)
+        self.assertIsInstance(FileStorage._FileStorage__objects, dict)
 
     def test_all(self):
         """Test all method"""
-        storage = FileStorage()
-        attrs = self.b1.to_dict()
-        storage._FileStorage__objects.update(attrs)
-        attrs2 = BaseModel().to_dict()
-        storage._FileStorage__objects.update(attrs2)
-        
-        
+        obj1 = self.b1.to_dict()
+        obj2 = BaseModel().to_dict()
 
-        self.assertEqual(storage.all(), attrs.update(attr))
+        FileStorage._FileStorage__objects = {"id1": obj1, "id2": obj2}
+        
+        expected = {"id1": obj1, "id2": obj2}
+        self.assertEqual(FileStorage().all(),  expected)
+        
+    def test_new(self):
+        """Test new method"""        
+        obj = BaseModel()
+        FileStorage().new(obj)
+
+        self.assertIn((f"{obj.__class__.__name__}.{obj.id}", obj.to_dict()),
+                        FileStorage._FileStorage__objects.items())
