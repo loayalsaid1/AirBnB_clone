@@ -64,11 +64,11 @@ class TestBaseModel(unittest.TestCase):
     def test_updated_at_attr_type(self):
         """Test the type of created_at"""
         self.assertTrue(type(self.b1.updated_at) is datetime.datetime)
-    
+
     def test_equal_create_and_updatetime(self):
         """test if the create and update time are the same"""
         self.assertEqual(self.b1.created_at, self.b1.updated_at)
-    
+
     def test_create_time_change(self):
         """test if 2 objects have diffenret create time"""
         b2 = BaseModel()

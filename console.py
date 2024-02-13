@@ -9,6 +9,7 @@ from models import storage
 
 classes = {"BaseModel": BaseModel}
 
+
 class HBNBCommand(cmd.Cmd):
     """The console class"""
 
@@ -31,7 +32,7 @@ class HBNBCommand(cmd.Cmd):
     def help_create(self):
         """The help text of <create command"""
         print("Create an object of class <class name>"
-                " and print its id")
+              " and print its id")
 
     def do_show(self, args):
         """Show the string representation of an instance with
@@ -101,8 +102,8 @@ class HBNBCommand(cmd.Cmd):
     def help_all(self):
         """help all"""
         print("all [<class name>]")
-        print("print either all the objects saved or all obejcts of"
-                " <class name>")
+        print("print either all the objects saved or all",
+              "obejcts of <class name>")
 
     def do_update(self, args):
         """Update an attribute of an instance
