@@ -48,8 +48,7 @@ class HBNBCommand(cmd.Cmd):
         elif args_len >= 2 and f"{args[0]}.{args[1]}" not in storage.all():
             print("** no instance found **")
         else:
-            object_attributes = storage.all()[f"{args[0]}.{args[1]}"]
-            obj = classes[args[0]](**object_attributes)
+            obj = storage.all()[f"{args[0]}.{args[1]}"]
             print(obj)
 
     def help_show(self):
@@ -87,19 +86,16 @@ class HBNBCommand(cmd.Cmd):
         instances = []
         objects = storage.all()
         if args_len == 0:
-            for key, value in objects.items():
-                model = key.split(sep='.')[0]
-                obj = classes[model](**value)
-                instances.append(str(obj))
+            for instance in objects.values():
+                instances.append(str(instance))
         else:
             if args[0] not in classes:
                 print("** class doesn't exist **")
                 return
-            for key, value in objects.items():
+            for key, instance in objects.items():
                 model = key.split(sep='.')[0]
                 if model == args[0]:
-                    obj = classes[model](**value)
-                    instances.append(str(obj))
+                    instances.append(str(instance))
         print(instances)
 
     def help_all(self):
@@ -130,11 +126,12 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
         else:
             model = classes[args[0]]
-            obj_attrs = storage.all()[f"{args[0]}.{args[1]}"]
+            obj = storage.all()[f"{args[0]}.{args[1]}"]
             value = args[3]
-            if obj_attrs.get(args[2]):
-                value = type(obj_attrs[args[2]])(value)
-            obj_attrs[args[2]] = value
+            if hasattr(obj, args[2]):
+                attr_type = type(getattr(obj, args[2]))
+                value = attr_type(value)
+            setattr(obj, args[2], value)
             storage.save()
 
     def help_update(self):

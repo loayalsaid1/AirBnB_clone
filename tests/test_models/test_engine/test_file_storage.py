@@ -43,8 +43,8 @@ class Test_FileStorage(unittest.TestCase):
 
     def test_all(self):
         """Test all method"""
-        obj1 = self.b1.to_dict()
-        obj2 = BaseModel().to_dict()
+        obj1 = self.b1
+        obj2 = BaseModel()
 
         FileStorage._FileStorage__objects = {"id1": obj1, "id2": obj2}
         
@@ -56,5 +56,4 @@ class Test_FileStorage(unittest.TestCase):
         obj = BaseModel()
         FileStorage().new(obj)
 
-        self.assertIn((f"{obj.__class__.__name__}.{obj.id}", obj.to_dict()),
-                        FileStorage._FileStorage__objects.items())
+        self.assertIn(obj, FileStorage._FileStorage__objects.values())
