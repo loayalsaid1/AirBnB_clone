@@ -3,6 +3,7 @@
 
 
 import cmd
+import re
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
@@ -25,8 +26,19 @@ classes = {"BaseModel": BaseModel,
 
 class HBNBCommand(cmd.Cmd):
     """The console class"""
-
     prompt = "(hbnb) "
+
+    def onecmd(self, line):
+        """Redefine the oncmd function"""
+        regex = r"^(.+)\.(\w+)\((.*)\)"
+
+        result = re.match(regex, line)
+        if result:
+            model = result.group(1)
+            command = result.group(2)
+            args = result.group(3)
+            line = f"{command} {model} {args}"
+        super().onecmd(line)
 
     def do_create(self, args):
         """Create a instance of <args>[0] class"""
@@ -152,6 +164,20 @@ class HBNBCommand(cmd.Cmd):
         """Help update"""
         print("Usage: update <class name> <id> <attribute> <value>")
         print("Update an attribute of an instance of a certain class")
+
+    def do_count(self, args):
+        """Count the number of instances in the databser"""
+        args = args.split()
+
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+
+        counter = 0
+        for obj in storage.all().keys():
+            if obj.split(sep='.')[0] == args[0]:
+                counter += 1
+
+        print(counter)
 
     def do_EOF(self, line):
         """Handle the EOF"""
