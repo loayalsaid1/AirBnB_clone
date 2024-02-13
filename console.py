@@ -23,7 +23,15 @@ classes = {"BaseModel": BaseModel,
            "Review": Review,
            }
 
-
+def handle_update(args):
+    regex = "(.+?),\s*(.+?),\s*(.+?)"
+    match = re.match(regex, args)
+    if match:
+        obj_id = match.group(1)
+        name = match.group(2)
+        value = match.group(3)
+        return f"{obj_id} {name} {value}"
+    return args
 class HBNBCommand(cmd.Cmd):
     """The console class"""
     prompt = "(hbnb) "
@@ -37,6 +45,8 @@ class HBNBCommand(cmd.Cmd):
             model = result.group(1)
             command = result.group(2)
             args = result.group(3)
+            if command == "update":
+                args = handle_update(args)
             line = f"{command} {model} {args}"
         super().onecmd(line)
 
