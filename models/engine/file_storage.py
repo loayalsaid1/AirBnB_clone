@@ -4,7 +4,7 @@
 
 from json import dump, load
 from os.path import exists
-# from models.base_model import BaseModel
+from models.base_model import BaseModel
 
 class FileStorage:
     """File storage class"""
