@@ -4,6 +4,7 @@
 
 from json import dump, load
 from os.path import exists
+# from models.base_model import BaseModel
 
 class FileStorage:
     """File storage class"""
@@ -17,15 +18,20 @@ class FileStorage:
     def new(self, obj):
         """Add a new object to the <__objects> dictionary in
             format {<obj_classname.obj_id : obj}"""
-        FileStorage.__objects.update({f"{obj.__class__.__name__}.{obj.id}": obj.to_dict()})
+        FileStorage.__objects.update({f"{obj.__class__.__name__}.{obj.id}": obj})
 
     def save(self):
         """Serialize <__objects> to the json file in the <__file_path>"""
         with open(FileStorage.__file_path, "w") as f:
-            dump(FileStorage.__objects, f)
+            dump({key: value.to_dict() for key, value in 
+                    FileStorage.__objects.items()}, f)
     
     def reload(self):
         """deserialize the json <__file_path> to <__objects>"""
         if exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r") as f:
-                FileStorage.__objects.update(load(f))
+                for key, value in load(f).items():
+                    model = eval(value["__class__"])
+                    obj = model(**value)
+                    FileStorage.__objects[key] = obj
+                    
